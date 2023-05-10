@@ -13,6 +13,7 @@ class Url(db.Model):
     name = db.Column( db.String(100) , nullable=True )
     long_url = db.Column( db.String(1000) , nullable=False  )
     short_url =  db.Column( db.String(100) , nullable=False , unique=True )
+    code = db.Column(db.String(64) , nullable=False  ),
     qr_code = db.Column(db.String(64) , nullable=True )
     created_at = db.Column(db.DateTime() , nullable=False , default=datetime.utcnow)
     user_id = db.Column(db.Integer() , db.ForeignKey('user.id') , nullable=True)

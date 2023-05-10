@@ -9,8 +9,8 @@ from functools import wraps
 # from dotenv import load_dotenv
 from flask import redirect , url_for
 # from flask_login import current_user 
-from backend.helpers.utils import db
-from backend.models.account import  Token , User
+from api.helpers.utils import db
+from api.models.account import  Token , User
 
 
 secrets.token_hex()

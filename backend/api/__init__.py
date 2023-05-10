@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from .config.config import config_dict
 from .auth.views import auth_namespace
 from .account.views import accounts_namespace
+from .visitor.views import visitor_namespace
 from .client.views import url_namespace
 from .helpers.utils import db
 from .models.url import  Url
@@ -29,6 +30,7 @@ def create_app(config=config_dict['dev']):
     bcrypt = Bcrypt(app)
     api = Api( 
         app , version='1.0', 
+        prefix= '/api/v1',
         title='URL shortenerr API', 
         description='A simple  API', 
         license_url='olakay', 
@@ -39,6 +41,7 @@ def create_app(config=config_dict['dev']):
     api.add_namespace(auth_namespace , path='/auth')
     api.add_namespace(accounts_namespace , path='/account')  
     api.add_namespace(url_namespace , path='/urls') 
+    api.add_namespace(visitor_namespace , path='/c') 
 
     @app.shell_context_processor
     def make_shell_context():

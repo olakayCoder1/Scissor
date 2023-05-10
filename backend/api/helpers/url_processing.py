@@ -1,7 +1,7 @@
 import random
 import string
 
-from backend.models.url import Url
+from api.models.url import Url
 from flask import request 
 from urllib.error import URLError, HTTPError 
 
@@ -34,7 +34,7 @@ class URLProcessing:
         if is_url_exist: 
             URLProcessing.short_url() 
         print(new_url)
-        return new_url
+        return True , random_string , new_url
     
 
     @classmethod
