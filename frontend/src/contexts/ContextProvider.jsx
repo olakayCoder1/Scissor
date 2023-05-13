@@ -12,34 +12,26 @@ export default function AuthContextProvider({children}){
     
     
     // const BACKEND_DOMAIN = 'http://127.0.0.1:8000'
-    const BACKEND_DOMAIN = 'https://web-production-fd13.up.railway.app'
-
+    const BACKEND_DOMAIN = 'http://127.0.0.1:5000/api/v1'
     // const FRONTEND_DOMAIN = 'http://127.0.0.1:3000'                   
-    const FRONTEND_DOMAIN = 'https://loanit.vercel.app'                   
-    // TOKEN STATE 
+    const FRONTEND_DOMAIN = 'https://loanit.vercel.app'       
     // USER DETAIL STATE 
     const [ authUser , setAuthUser ] = React.useState(()=> JSON.parse(localStorage.getItem('authUser'))|| null);
     // LOADING STATE TO DETERMINE WHEN TO UPDATE TOKEN 
     // const [ loginError, setLoginError] = useState(false)
-
-    const [ Loading , setLoading ] = useState(null)
+    const [ loading , setLoading ] = useState(null)
      // REFRESH TOKEN WHILE USER STILL ONLINE 
- 
-    
-
     const [ authToken , setAuthToken  ] = React.useState(()=> JSON.parse(localStorage.getItem('authToken'))|| null);
     const [ showNavigationBar , setShowNavigationBar] = useState(false)
     // const [ showNavigationBar , setShowNavigationBar] = useState(()=> JSON.parse(localStorage.getItem('showNavigationBar')) || false )
     const [ isAuthenticated, setIsAuthenticated  ]  = useState(()=> JSON.parse(localStorage.getItem('isAuthenticated'))|| false )
  
 
-   
-
 
     function logout(){
         displayNotification('info','You are logged out')
         localStorage.clear()
-        window.location.pathname = '/'
+        window.location.pathname = '/login' 
     }
 
     function login(){
@@ -81,9 +73,22 @@ export default function AuthContextProvider({children}){
     const [ currentPath, setCurrentPath] = useState(null) 
 
    useEffect(() => {
-      setCurrentPath(window.location.pathname)
+    // check if the user is authenticated or not 
+    // if not authenticated and accessing auth route redirect to login
+        const anonymousRoutes = ['/login','/register', '/']
+        if(authUser === null && anonymousRoutes.indexOf(window.location.pathname) === -1){
+            window.location.pathname = '/login'
+            // displayNotification('info','Login or create an account')
+        }
+    // check if the user is authenticated or not 
+    // if authenticated and accessing anonymous route redirect to dashboard
+        if(authUser && anonymousRoutes.indexOf(window.location.pathname) !== -1){
+            window.location.pathname = '/dashboard'
+            // displayNotification('info','Login or create an account')
+        }
+        setCurrentPath(window.location.pathname)
   
-    }, [currentPath]);
+    }, [currentPath,authUser]);
 
     function displayNotification(type, text ){
         console.log('Notification')
@@ -138,7 +143,9 @@ export default function AuthContextProvider({children}){
 
 
  const value = { 
-    showNavigationBar , setShowNavigationBar, displayNotification,currentPath, setCurrentPath
+    showNavigationBar , setShowNavigationBar, logout,
+    displayNotification,currentPath, setCurrentPath,
+    BACKEND_DOMAIN, loading, setLoading,authUser , setAuthUser
  }
      
 
