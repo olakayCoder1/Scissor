@@ -9,11 +9,14 @@ from werkzeug.security import generate_password_hash , check_password_hash
 
 class Url(db.Model):
     id = db.Column(db.Integer() , primary_key=True)
+    clicks = db.Column(db.Integer() ,default=0)
     uuid = db.Column(db.String(length=60), nullable=False,  unique=True)
     name = db.Column( db.String(100) , nullable=True )
+    title = db.Column( db.String(100) , nullable=True )
+    description = db.Column( db.String(1000) , nullable=True )
     long_url = db.Column( db.String(1000) , nullable=False  )
     short_url =  db.Column( db.String(100) , nullable=False , unique=True )
-    code = db.Column(db.String(64) , nullable=False  ),
+    url_code = db.Column(db.String(64) , nullable=False  ),
     qr_code = db.Column(db.String(64) , nullable=True )
     created_at = db.Column(db.DateTime() , nullable=False , default=datetime.utcnow)
     user_id = db.Column(db.Integer() , db.ForeignKey('user.id') , nullable=True)

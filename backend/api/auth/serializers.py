@@ -15,8 +15,8 @@ USER_FIELDS_SERIALIZER = {
    }
 
 USER_REGISTRATION_FIELDS_SERIALIZER = {
-      'first_name' : fields.String(required=True , description='First Name'),
-      'last_name' : fields.String(required=True , description='Last Name'),
+      # 'first_name' : fields.String(required=True , description='First Name'),
+      # 'last_name' : fields.String(required=True , description='Last Name'),
       'email' : fields.String(required=True , description='An email address'),
       'password' : fields.String(required=True , description='A password'),
    }

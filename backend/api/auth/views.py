@@ -33,7 +33,7 @@ signup_model = auth_namespace.model( 'Signup', USER_REGISTRATION_FIELDS_SERIALIZ
 class SignUpApiView(Resource):
 
    @auth_namespace.expect(signup_model)  
-   @auth_namespace.marshal_with(user_model , code=HTTPStatus.CREATED)     
+   # @auth_namespace.marshal_with(user_model , code=HTTPStatus.CREATED)     
    @auth_namespace.doc(description='Register an account' )
    def post(self):
       data = request.get_json()
@@ -56,7 +56,18 @@ class SignUpApiView(Resource):
          db.session.rollback()
          response = {'message' : 'An error occured saving'} 
          return response, HTTPStatus.INTERNAL_SERVER_ERROR
-      return new_user , HTTPStatus.CREATED 
+      access_token = create_access_token(identity=new_user.email)
+      refresh_token = create_refresh_token(identity=new_user.email)
+      tokens = {
+            'access_token' : access_token ,
+            'refresh_token' : refresh_token
+         }
+      response = {
+         'uuid': new_user.uuid,
+         'email': new_user.email,
+         'tokens': tokens
+      }
+      return response , HTTPStatus.CREATED 
       # return DateTimeEncoder(data) , HTTPStatus.CREATED 
 
 
@@ -74,9 +85,13 @@ class SignInApiView(Resource):
       if attempt_user and check_password_hash(attempt_user.password_hash , password):
          access_token = create_access_token(identity=attempt_user.email)
          refresh_token = create_refresh_token(identity=attempt_user.email)
-         response = {
+         tokens = {
             'access_token' : access_token ,
             'refresh_token' : refresh_token
+         }
+         response = {
+            'email': attempt_user.email,
+            'tokens': tokens   
          }
          return response , HTTPStatus.OK 
       response = { 'message' : 'Invalid credentials'}

@@ -23,17 +23,20 @@ url_model = url_namespace.model( 'Url', URL_FIELDS_SERIALIZER )
 class GenerateURLApiView(Resource):
    
    @url_namespace.expect(url_create_model)
-   @url_namespace.expect(url_model) 
    @url_namespace.doc(description='Shortening url')     
    def post(self): 
       data = request.get_json()
       long_url = data.get('long_url')
+      
       if URLProcessing.is_valid_url(long_url):
+         title , description = URLProcessing.extract_url_data(long_url)
          _ , code , short_url = URLProcessing.short_url()
          url =  Url(
             long_url=long_url,
             short_url=short_url,
-            
+            title=title,
+            description=description,
+            url_code=code
          )
          try:
             url.save()
@@ -46,6 +49,11 @@ class GenerateURLApiView(Resource):
             'uuid' : url.uuid,
             'shortUrl' : url.short_url,
             'longUrl' : url.long_url,
+            'title' : url.title,
+            'description' : url.description,
+            'name' : url.name,
+            'clicks' : url.clicks,
+            'url_code' : url.url_code,
          }
          return response , HTTPStatus.OK  
       response = { 'message' : 'The url is not invalid' }
@@ -53,21 +61,14 @@ class GenerateURLApiView(Resource):
    
 
 
-@url_namespace.route('/<url_uuid>/qrcode')
-class GenerateURLQrCodeApiView(Resource):
+@url_namespace.route('') 
+class GetURLSApiView(Resource):
    
-   @url_namespace.doc(description='Shortening url') 
-   @jwt_required()    
-   def get(self , url_uuid ):
-      img = qrcode.make(url_uuid)
-      img_io = io.BytesIO()
-      img.save(img_io, 'PNG')
-      img_io.seek(0)
-      return send_file(
-         img_io, mimetype='image/png', 
-         as_attachment=True, 
-         attachment_filename='qrcode.png'
-      )
+   @url_namespace.doc(description='Retrieve all urls') 
+   @url_namespace.marshal_with(url_model)     
+   def get(self):
+      urls = Url.query.all()   
+      return urls , HTTPStatus.OK  
 
 
 @url_namespace.route('/<url_uuid>/qrcode')

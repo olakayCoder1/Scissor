@@ -48,4 +48,31 @@ class URLProcessing:
             r'(?::\d+)?'  # optional port
             r'(?:/?|[/?]\S+)$', re.IGNORECASE)
         return bool(regex.match(url)) 
+
+    @classmethod
+    def extract_url_data(cls,url): 
+        from bs4 import BeautifulSoup
+        import requests
+        # Make a GET request to the URL
+        response = requests.get(url)
+
+        # Parse the HTML content of the page using BeautifulSoup
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # Extract the title of the page
+        title = soup.title.string
+
+        # Extract the description of the page
+        description = soup.find('meta', attrs={'name': 'description'})['content']
+
+        # Extract the image URL of the page
+        image = soup.find('meta', property='og:image')['content']
+
+        # Print the link preview information
+        
+        print('Title:', title)
+        print('Description:', description)
+        print('Image URL:', image)
+        return title , description
+
  
