@@ -41,14 +41,14 @@ function SideBar() {
     <div className="w-[270px] overflow-y-auto fixed left-0 bottom-0 top-16">
       <aside  className="w-full left-0  h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
          <div className="h-full px-3 py-4 overflow-y-auto  border-r-2 border-gray-200 bg-white">
-            <div  class="p-4  rounded-lg bg-blue-50 ">
-               <div class="flex items-center mb-3">
-                  <span class="bg-orange-100 text-orange-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded ">programmerolakay@gmail.com</span>
+            <div  className="p-4  rounded-lg bg-blue-50 ">
+               <div className="flex items-center mb-3">
+                  <span className="bg-orange-100 text-orange-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded ">programmerolakay@gmail.com</span>
                </div>
-               <p class="mb-3 text-sm text-blue-800 dark:text-blue-400">
+               <p className="mb-3 text-sm text-blue-800 dark:text-blue-400">
                   Buy a subscription to use more professional features without displaying ads
                </p>
-               <a class="text-sm text-blue-800 underline font-medium hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" href="#">Buy subscription</a>
+               <a className="text-sm text-blue-800 underline font-medium hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" href="#">Buy subscription</a>
             </div>
             <h2 className=' p-2 text-gray-900'>General</h2>
             <ul className="space-y-2 font-medium">
