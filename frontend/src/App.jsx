@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Header from './components/Header'
-import SideBar from './components/SideBar'
-import Dashboard from './pages/Dashboard'
-import LinkManagement from './pages/LinkManagement'
+import Register from './pages/Register';
+import Login from './pages/Login';
+import DashboardWrap from './pages/DashboardWrap';
+import LinkManagementWrap from './pages/LinkManagementWrap';
 
 
 function App() {
@@ -15,16 +15,12 @@ function App() {
     <Router>
         <div className=' bg-gray-50 font-medium text-base text-gray-700'>
         <ToastContainer />
-          <Header /> 
-          <div className='mt-16 flex'>
-            <SideBar />
-            <div className=' md:ml-[270px] h-screen grow '>
-            <Routes>
-              <Route path='/' element={<Dashboard />}/>
-              <Route path='/links' element={<LinkManagement />}/>
-            </Routes>
-            </div>
-          </div>
+          <Routes>
+            <Route path='/' element={<DashboardWrap />}/>
+            <Route path='/links' element={<LinkManagementWrap />}/>
+            <Route path='/login' element={<Login />}/>
+            <Route path='/register' element={<Register />}/>
+          </Routes>
         </div>
     </Router>
   )

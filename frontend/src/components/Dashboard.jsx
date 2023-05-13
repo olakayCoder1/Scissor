@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
-import DashboardBreakDownCard from '../components/DashboardBreakDownCard'
-import DashboardUrlCard from '../components/DashboardUrlCard'
+import DashboardBreakDownCard from './DashboardBreakDownCard'
+import DashboardUrlCard from './DashboardUrlCard'
 import { AiOutlineLink, AiFillSignal, AiOutlineDownload } from 'react-icons/ai'
 import {TbHandClick} from 'react-icons/tb'
 import {MdAdd} from 'react-icons/md'

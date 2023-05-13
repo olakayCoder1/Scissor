@@ -1,5 +1,5 @@
 import React from 'react'
-import DashboardUrlCard from '../components/DashboardUrlCard'
+import DashboardUrlCard from './DashboardUrlCard'
 
 function LinkManagement() {
   return (

@@ -12,7 +12,7 @@ function Header() {
         <RxHamburgerMenu className=' w-6 h-6 '/>
       </p>
       <a href="#" className="flex items-center">
-          <img src="https://avatars.githubusercontent.com/u/95700260?v=4" className="h-8 mr-3" alt="Flowbite Logo" />
+          <img src="https://avatars.githubusercontent.com/u/95700260?v=4" className="h-8 mr-3" alt="UrlShorter Logo" />
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">UrlShoter</span>
       </a>
     </div>
