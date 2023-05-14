@@ -94,6 +94,7 @@ class GetURLSBreakDownApiView(Resource):
          'totalUrls': Url.get_total_urls(auth_user.id),
          'totalClicks': Url.get_total_clicks(auth_user.id), 
       }
+
       return response , HTTPStatus.OK  
    
 
