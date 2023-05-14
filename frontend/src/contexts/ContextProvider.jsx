@@ -91,7 +91,6 @@ export default function AuthContextProvider({children}){
     }, [currentPath,authUser]);
 
     function displayNotification(type, text ){
-        console.log('Notification')
         if(type==='info'){
             toast.info(`${text}`, {
                 position: "top-right",
