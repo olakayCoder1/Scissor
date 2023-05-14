@@ -24,7 +24,15 @@ class GenerateURLApiView(Resource):
    
    @url_namespace.expect(url_create_model)
    @url_namespace.doc(description='Shortening url')     
+   @url_namespace.marshal_with(url_model)   
+   @jwt_required()  
    def post(self): 
+      authenticated_user_email = get_jwt_identity() 
+      auth_user = User.query.filter_by(email=authenticated_user_email).first()   
+      if not auth_user:
+         return {
+            'message': 'Cannot find record of this user.'
+         }, HTTPStatus.NOT_FOUND
       data = request.get_json()
       long_url = data.get('long_url')
       
@@ -36,7 +44,8 @@ class GenerateURLApiView(Resource):
             short_url=short_url,
             title=title,
             description=description,
-            url_code=code
+            url_code=code,
+            user_id=auth_user.id
          )
          try:
             url.save()
@@ -44,20 +53,9 @@ class GenerateURLApiView(Resource):
             db.session.rollback()
             response = { 'message' : 'An error occurred'} 
             return response , HTTPStatus.INTERNAL_SERVER_ERROR 
-         
-         response = { 
-            'uuid' : url.uuid,
-            'shortUrl' : url.short_url,
-            'longUrl' : url.long_url,
-            'title' : url.title,
-            'description' : url.description,
-            'name' : url.name,
-            'clicks' : url.clicks,
-            'url_code' : url.url_code,
-         }
-         return response , HTTPStatus.OK  
+         return url , HTTPStatus.OK  
       response = { 'message' : 'The url is not invalid' }
-      return response , HTTPStatus.BAD_GATEWAY 
+      return response , HTTPStatus.BAD_REQUEST  
    
 
 
@@ -65,10 +63,56 @@ class GenerateURLApiView(Resource):
 class GetURLSApiView(Resource):
    
    @url_namespace.doc(description='Retrieve all urls') 
-   @url_namespace.marshal_with(url_model)     
+   @url_namespace.marshal_with(url_model)   
+   @jwt_required()   
    def get(self):
-      urls = Url.query.all()   
+      authenticated_user_email = get_jwt_identity() 
+      print(authenticated_user_email) 
+      auth_user = User.query.filter_by(email=authenticated_user_email).first()  
+      print(Url.get_total_urls(auth_user.id))  
+      print(Url.get_total_clicks(auth_user.id))  
+      if not auth_user:
+         return {
+            'message': 'Cannot find record of this user.'
+         }, HTTPStatus.NOT_FOUND
+      urls = Url.query.filter_by(user_id=auth_user.id).all()  
       return urls , HTTPStatus.OK  
+
+@url_namespace.route('/breakdown') 
+class GetURLSBreakDownApiView(Resource):
+   
+   @url_namespace.doc(description='Retrieve all urls')    
+   @jwt_required() 
+   def get(self):
+      authenticated_user_email = get_jwt_identity() 
+      auth_user = User.query.filter_by(email=authenticated_user_email).first()   
+      if not auth_user:
+         return {
+            'message': 'Cannot find record of this user.'
+         }, HTTPStatus.NOT_FOUND
+      response = {
+         'totalUrls': Url.get_total_urls(auth_user.id),
+         'totalClicks': Url.get_total_clicks(auth_user.id), 
+      }
+      return response , HTTPStatus.OK  
+   
+
+@url_namespace.route('/latest') 
+class GetLatestURLSApiView(Resource):
+   
+   @url_namespace.doc(description='Retrieve all urls') 
+   @url_namespace.marshal_list_with(url_model)       
+   @jwt_required()  
+   def get(self):
+      authenticated_user_email = get_jwt_identity() 
+      auth_user = User.query.filter_by(email=authenticated_user_email).first()   
+      if not auth_user:
+         return {
+            'message': 'Cannot find record of this user.'
+         }, HTTPStatus.NOT_FOUND
+
+      urls = Url.query.filter_by(user_id=auth_user.id).order_by(Url.created_at.desc()).limit(5).all()  
+      return urls , HTTPStatus.OK   
 
 
 @url_namespace.route('/<url_uuid>/qrcode')

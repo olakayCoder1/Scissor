@@ -16,7 +16,7 @@ class Url(db.Model):
     description = db.Column( db.String(1000) , nullable=True )
     long_url = db.Column( db.String(1000) , nullable=False  )
     short_url =  db.Column( db.String(100) , nullable=False , unique=True )
-    url_code = db.Column(db.String(64) , nullable=False  ),
+    url_code = db.Column(db.String(64) , nullable=False  )
     qr_code = db.Column(db.String(64) , nullable=True )
     created_at = db.Column(db.DateTime() , nullable=False , default=datetime.utcnow)
     user_id = db.Column(db.Integer() , db.ForeignKey('user.id') , nullable=True)
@@ -29,8 +29,16 @@ class Url(db.Model):
 
     def delete(self):
         db.session.delete(self)
-        db.session.commit()
+        db.session.commit() 
 
+    @classmethod
+    def get_total_clicks(cls, id):
+        urls = Url.query.filter_by(user_id=id).all()
+        total_clicks = sum([url.clicks for url in urls])
+        return total_clicks
+    @classmethod
+    def get_total_urls(cls,id):
+        return Url.query.filter_by(user_id=id).count() 
 
     @classmethod
     def check_url(cls , url):

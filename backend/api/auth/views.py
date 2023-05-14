@@ -14,7 +14,6 @@ from datetime import datetime
 
 
 
-
 class DateTimeEncoder(json.JSONEncoder):
     def default(self,o):
         if isinstance(o , datetime):
@@ -47,8 +46,7 @@ class SignUpApiView(Resource):
          return response, HTTPStatus.BAD_REQUEST  
          
       new_user  = User(
-         email=email, first_name=first_name , last_name=last_name,
-         password_hash= generate_password_hash(password)
+         email=email,  password_hash= generate_password_hash(password)
       )
       try:
          new_user.save()

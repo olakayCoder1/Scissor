@@ -1,8 +1,8 @@
-"""code added to url
+"""initial migration
 
-Revision ID: ffd176ad67c8
+Revision ID: 2c884e0b14cc
 Revises: 
-Create Date: 2023-05-10 00:10:26.720055
+Create Date: 2023-05-14 02:30:11.572585
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'ffd176ad67c8'
+revision = '2c884e0b14cc'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -43,10 +43,14 @@ def upgrade():
     )
     op.create_table('url',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('clicks', sa.Integer(), nullable=True),
     sa.Column('uuid', sa.String(length=60), nullable=False),
     sa.Column('name', sa.String(length=100), nullable=True),
+    sa.Column('title', sa.String(length=100), nullable=True),
+    sa.Column('description', sa.String(length=1000), nullable=True),
     sa.Column('long_url', sa.String(length=1000), nullable=False),
     sa.Column('short_url', sa.String(length=100), nullable=False),
+    sa.Column('url_code', sa.String(length=64), nullable=False),
     sa.Column('qr_code', sa.String(length=64), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),

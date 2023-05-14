@@ -9,8 +9,6 @@ from uuid import uuid4
 class User(db.Model):
     id = db.Column(db.Integer() , primary_key=True)
     uuid = db.Column(db.String(length=60), nullable=False,  unique=True)
-    first_name = db.Column( db.String(100) , nullable=False  )
-    last_name = db.Column( db.String(100) , nullable=False  )
     email =  db.Column( db.String(100) , nullable=False , unique=True )
     password_hash = db.Column(db.String(64) , nullable=False )
     created_at = db.Column(db.DateTime() , nullable=False , default=datetime.utcnow)

@@ -60,19 +60,18 @@ class URLProcessing:
         soup = BeautifulSoup(response.content, 'html.parser')
 
         # Extract the title of the page
-        title = soup.title.string
+        try:
+            title = soup.title.string
+        except:
+            title = ''
 
         # Extract the description of the page
-        description = soup.find('meta', attrs={'name': 'description'})['content']
-
-        # Extract the image URL of the page
-        image = soup.find('meta', property='og:image')['content']
-
-        # Print the link preview information
-        
+        try:
+            description = soup.find('meta', attrs={'name': 'description'})['content']
+        except:
+            description = '' 
         print('Title:', title)
-        print('Description:', description)
-        print('Image URL:', image)
+        print('Description:', description) 
         return title , description
 
  
