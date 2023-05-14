@@ -79,25 +79,7 @@ function Dashboard() {
             setInLoad(false)
         }
 
-        async function handleSubmit(){
-            if(authUser){
- 
-                const url2 = `${BACKEND_DOMAIN}/urls/breakdown` 
-                const response = await fetch(url2 , {method : 'GET', headers : {
-                    'Content-Type': 'application/json',
-                    'Authorization' : `Bearer ${authUser?.tokens?.access_token}`    
-                } 
-            },)
-            if(response.status === 200){
-                const data = await response.json()
-                setUrlBreakDown(data)
-            }else{
-                // logout()  
-            }
-            
-        }}
-
-        handleSubmit()
+        
       },[])
 
 
