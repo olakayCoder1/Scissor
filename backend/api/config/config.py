@@ -7,7 +7,7 @@ BASE_DIR=os.path.dirname(os.path.realpath(__file__))
 class Config:
     SECRET_KEY='HDHAjabIHAIHKSBIy9ahhioij9J'
     SQLALCHEMY_TRACK_MODIFICATIONS=True
-    JWT_ACCESS_TOKEN_EXPIRES=timedelta(minutes=30)
+    JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=24)
     JWT_REFRESH_TOKEN_EXPIRES=timedelta(days=1)
     JWT_SECRET_KEY='ksjs8wuUuHujsjjsjjsmsmw'
 
