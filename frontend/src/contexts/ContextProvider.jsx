@@ -19,7 +19,7 @@ export default function AuthContextProvider({children}){
     const [ authUser , setAuthUser ] = React.useState(()=> JSON.parse(localStorage.getItem('authUser'))|| null);
     // LOADING STATE TO DETERMINE WHEN TO UPDATE TOKEN 
     // const [ loginError, setLoginError] = useState(false)
-    const [ loading , setLoading ] = useState(null)
+    const [ loading , setLoading ] = useState(false)
      // REFRESH TOKEN WHILE USER STILL ONLINE 
     const [ authToken , setAuthToken  ] = React.useState(()=> JSON.parse(localStorage.getItem('authToken'))|| null);
     const [ showNavigationBar , setShowNavigationBar] = useState(false)

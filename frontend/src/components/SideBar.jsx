@@ -30,11 +30,11 @@ function SideBarLink({Icon, linkName , linkLocation }){
 
 
 function SideBar() {
-   const {logout, authUser} = useContext(AuthContext)
+   const {logout, authUser, showNavigationBar} = useContext(AuthContext)
    const [ currentPath, setCurrentPath] = useState(null) 
 
   return (
-    <div className="w-[270px] overflow-y-auto fixed left-0 bottom-0 top-16">
+    <div className={`${showNavigationBar ? "w-[270px] fixed left-0 bottom-0 top-16  overflow-y-auto " : "hidden"}`}>
       <aside  className="w-full left-0  h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
          <div className="h-full px-3 py-4 overflow-y-auto  border-r-2 border-gray-200 bg-white">
             <div  className="p-4  rounded-lg bg-blue-50 ">

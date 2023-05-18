@@ -12,7 +12,10 @@ import InAppLoading from './InAppLoading'
 function Dashboard() {
     const {displayNotification,BACKEND_DOMAIN, authUser, logout} = useContext(AuthContext)
     const [longUrl , setLongUrl] = useState('')
-    const [urlBreakDown , setUrlBreakDown] = useState(null)
+    const [urlBreakDown , setUrlBreakDown] = useState({
+        'totalUrls': 0,
+        'totalClicks': 0, 
+    })
     const [latest , setLatest] = useState(null)
     const [ inLoad , setInLoad ] = useState(false)
 
@@ -35,6 +38,9 @@ function Dashboard() {
                 val.unshift(data)
                 setLatest(val) 
                 displayNotification('success','Shorten url created')
+                setUrlBreakDown(( prev => {
+                    return { ...prev , 'totalUrls': urlBreakDown + 1 }
+                  }))
                 setLongUrl('')
             }else if(response.status === 400){
                     const data = await response.json()

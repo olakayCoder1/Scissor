@@ -1,7 +1,7 @@
 import React from 'react'
 import { AiFillSignal, AiOutlineDownload } from 'react-icons/ai'
 import {RiDeleteBin6Line} from 'react-icons/ri'
-
+import { Link } from "react-router-dom"; 
 
 
 function DashboardUrlCard({urlData}) {
@@ -13,9 +13,9 @@ function DashboardUrlCard({urlData}) {
         </div>
         <div className=' font-normal'>
             <h3 className=' text-gray-900 text-base'>{urlData?.title}</h3> 
-            <a href="#" className=' text-gray-500' target="_blank" rel="noopener noreferrer">{urlData?.long_url}</a>
+            <Link to={urlData?.long_url} className=' text-gray-500' target="_blank" rel="noopener noreferrer">{urlData?.long_url}</Link>
             <hr className=' my-2'/>
-            <a href="http://" className=' text-green-500' target="_blank" rel="noopener noreferrer">{urlData?.short_url}</a>
+            <Link to={urlData?.short_url} className=' text-green-500' target="_blank" rel="noopener noreferrer">{urlData?.short_url}</Link>
         </div>
 
         <div className=' flex justify-between items-center mt-2'>
