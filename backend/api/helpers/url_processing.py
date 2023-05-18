@@ -29,7 +29,8 @@ class URLProcessing:
     def short_url(cls):
         characters = string.ascii_letters + string.digits
         random_string = ''.join(random.choices(characters, k=6))
-        new_url = f'https://{request.host}/{random_string}'
+        frontend_domain = 'http://127.0.0.1:5173/c/'
+        new_url = f'{frontend_domain}{random_string}' 
         is_url_exist = Url.check_url(new_url)
         if is_url_exist: 
             URLProcessing.short_url() 

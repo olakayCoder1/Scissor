@@ -78,6 +78,25 @@ class GetURLSApiView(Resource):
       urls = Url.query.filter_by(user_id=auth_user.id).all()  
       return urls , HTTPStatus.OK  
 
+
+@url_namespace.route('/<url_code>/click') 
+class URLClickApiView(Resource): 
+   @url_namespace.doc(description='Shot url click count') 
+   @url_namespace.marshal_with(url_model)   
+   def get(self,url_code):
+      print(url_code)
+      url = Url.query.filter_by(url_code=url_code).first() 
+      if not url:
+         return {
+            'message': 'Invalid url.'
+         }, HTTPStatus.NOT_FOUND 
+      url.clicks = url.clicks + 1
+      try:
+         url.save()
+      except:
+         pass
+      return url , HTTPStatus.OK  
+
 @url_namespace.route('/breakdown') 
 class GetURLSBreakDownApiView(Resource):
    

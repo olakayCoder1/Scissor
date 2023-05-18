@@ -23,7 +23,8 @@ class Url(db.Model):
 
 
     def save(self):
-        self.uuid = uuid4().hex
+        if not self.uuid :
+            self.uuid = uuid4().hex
         db.session.add(self)
         db.session.commit()
 
