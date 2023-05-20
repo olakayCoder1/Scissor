@@ -1,10 +1,9 @@
 import { useContext, useEffect, useState } from 'react'
 import DashboardBreakDownCard from './DashboardBreakDownCard'
 import DashboardUrlCard from './DashboardUrlCard'
-import { AiOutlineLink, AiFillSignal, AiOutlineDownload } from 'react-icons/ai'
+import { AiOutlineLink  } from 'react-icons/ai'
 import {TbHandClick} from 'react-icons/tb'
 import {MdAdd} from 'react-icons/md'
-import {RiDeleteBin6Line} from 'react-icons/ri'
 import { AuthContext } from '../contexts/ContextProvider'
 import InAppLoading from './InAppLoading'
 
@@ -16,10 +15,28 @@ function Dashboard() {
         'totalUrls': 0,
         'totalClicks': 0, 
     })
-    const [latest , setLatest] = useState(null)
+    const [latest , setLatest] = useState([])
     const [ inLoad , setInLoad ] = useState(false)
 
 
+    async function handleDeleteClick(id){
+        console.log('Button clicked in parent component', id );
+        const url = `${BACKEND_DOMAIN}/urls/${id}`
+        const response = await fetch(url , {method : 'DELETE', headers : {
+            'Content-Type': 'application/json',   
+            'Authorization' : `Bearer ${authUser?.tokens?.access_token}`
+        }},)
+        if(response.status === 200){
+            const data = await response.json()
+            displayNotification('success',data.message)   
+        }
+        if(response.status === 401){
+            logout()
+        }
+        if(response.status === 500){
+            displayNotification('error', 'Internal server error occurred')
+        }
+      };
 
     async function handleSubmit(e){
         e.preventDefault()
@@ -32,6 +49,7 @@ function Dashboard() {
             },
             body: JSON.stringify({'long_url': longUrl}) 
             },)
+            console.log(response.status)
             if(response.status === 200){
                 const data = await response.json()
                 const val = latest
@@ -43,63 +61,73 @@ function Dashboard() {
                   }))
                 setLongUrl('')
             }else if(response.status === 400){
-                    const data = await response.json()
-                    displayNotification('error','The url is not invalid') 
+                const data = await response.json()
+                displayNotification('error','The url is not invalid') 
+            }else if(response.status === 401){
+                // const data = await response.json()
+                logout()
             }else{
                 // 
-            } 
+            }  
             setInLoad(false)
         }else{
             displayNotification('error','Kindly input a url')
         }
         
-}
+    }
 
 
     useEffect(()=> {
-        if(authUser){
-          setInLoad(true)
-          const url = `${BACKEND_DOMAIN}/urls/breakdown`   
-          const url1 = `${BACKEND_DOMAIN}/urls/latest`  
-          Promise.all([
-          fetch(url , {method : 'GET', headers : {
-              'Content-Type': 'application/json',
-              'Authorization' : `Bearer ${authUser?.tokens?.access_token}`
-          }}),
-          fetch(url1,{method : 'GET', headers : {  
+
+        async function fetchBreakDown(){
+            const url = `${BACKEND_DOMAIN}/urls/breakdown` 
+            const response = await fetch(url , {method : 'GET', headers : {
                 'Content-Type': 'application/json',   
                 'Authorization' : `Bearer ${authUser?.tokens?.access_token}`
             }},)
-            ]).then(function (responses) {
-              // Get a JSON object from each of the responses
-              return Promise.all(responses.map(function (response) {
-                return response.json();
-              }));
-            }).then(function (data) { 
-                setUrlBreakDown(data[0])
-                setLatest(data[1])
-            }).catch(function (error) {
-              // if there's an error, log it   
-              console.log(error)
-            });  
-            setInLoad(false)
+            if(response.status === 200){
+                const data = await response.json()
+                setUrlBreakDown(data)   
+            }
+            if(response.status === 401){
+                logout()
+            }
         }
 
+        async function fetchLatest(){
+            setInLoad(true)
+            const url = `${BACKEND_DOMAIN}/urls/latest` 
+            if(authUser){
+                const response = await fetch(url , {method : 'GET', headers : {
+                    'Content-Type': 'application/json',   
+                    'Authorization' : `Bearer ${authUser?.tokens?.access_token}`
+                }},)
+                if(response.status === 200){
+                    const data = await response.json()
+                    setLatest(data)   
+                }
+                if(response.status === 401){
+                    logout()
+                }
+            }
+            setInLoad(false)  
+        }
+       
+        fetchLatest()
+        fetchBreakDown()
+
         
-      },[])
+      },[]) 
 
 
   return (
     <div className=' m-4 pb-24'>
       <div className='w-full bg-white h-36 rounded-md grid grid-cols-1 md:grid-cols-3 gap-4 p-4'>
-        <DashboardBreakDownCard Icon={AiOutlineLink} cardName="ALL URLS" total={urlBreakDown?.totalUrls}/>
-        <DashboardBreakDownCard Icon={TbHandClick} cardName="TOTAL CLICKS" total={urlBreakDown?.totalClicks}/>
-        <DashboardBreakDownCard Icon={MdAdd} cardName="URLS ADDED THIS MONTH" total={urlBreakDown?.totalUrls}/>
+        <DashboardBreakDownCard Icon={AiOutlineLink} cardName="ALL URLS" total={urlBreakDown && urlBreakDown?.totalUrls}/>
+        <DashboardBreakDownCard Icon={TbHandClick} cardName="TOTAL CLICKS" total={urlBreakDown && urlBreakDown?.totalClicks}/>
+        <DashboardBreakDownCard Icon={MdAdd} cardName="URLS ADDED THIS MONTH" total={urlBreakDown && urlBreakDown?.totalUrls}/>
       </div>
-
- 
-
-      
+        
         <form className=' my-6  max-w-xl' onSubmit={handleSubmit}>   
             <label htmlFor="shorten" className="mb-2 text-sm font-medium sr-only ">Paste long url and shorten it</label>
             <div className="relative">
@@ -120,8 +148,8 @@ function Dashboard() {
             <InAppLoading />
             ): (
             <> 
-            {latest && latest?.map((val)=> {
-                return (<DashboardUrlCard key={val.uuid} urlData={val}/>)
+            {latest.length > 0 && latest?.map((val)=> {
+                return (<DashboardUrlCard key={val.uuid} urlData={val} handleDeleteClick={(id) => handleDeleteClick(id)}/>)
             })}
             </>
         )}

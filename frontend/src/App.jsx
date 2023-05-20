@@ -29,7 +29,7 @@ function App() {
               <Route path='/c/:id' element={<LinkClick />}/>
               <Route path='/login' element={<Login />}/>
               <Route path='/register' element={<Register />}/>
-              <Route path="*" element={<NotFound />} />
+              {/* <Route path="*" element={<NotFound />} /> */}
             </Routes>
         </div>
     </Router>
