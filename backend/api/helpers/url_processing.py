@@ -56,10 +56,8 @@ class URLProcessing:
         import requests
         # Make a GET request to the URL
         response = requests.get(url)
-
         # Parse the HTML content of the page using BeautifulSoup
         soup = BeautifulSoup(response.content, 'html.parser')
-
         # Extract the title of the page
         try:
             title = soup.title.string
@@ -71,8 +69,8 @@ class URLProcessing:
             description = soup.find('meta', attrs={'name': 'description'})['content']
         except:
             description = '' 
-        print('Title:', title)
-        print('Description:', description) 
+        # print('Title:', title)
+        # print('Description:', description) 
         return title , description
 
  

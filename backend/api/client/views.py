@@ -66,17 +66,36 @@ class GetURLSApiView(Resource):
    @url_namespace.marshal_with(url_model)   
    @jwt_required()   
    def get(self):
-      authenticated_user_email = get_jwt_identity() 
-      print(authenticated_user_email) 
+      authenticated_user_email = get_jwt_identity()
       auth_user = User.query.filter_by(email=authenticated_user_email).first()  
-      print(Url.get_total_urls(auth_user.id))  
-      print(Url.get_total_clicks(auth_user.id))  
       if not auth_user:
          return {
             'message': 'Cannot find record of this user.'
          }, HTTPStatus.NOT_FOUND
       urls = Url.query.filter_by(user_id=auth_user.id).all()  
       return urls , HTTPStatus.OK  
+   
+
+@url_namespace.route('/<id>') 
+class GetURLSApiView(Resource):
+   @url_namespace.doc(description='Delete url')  
+   @jwt_required()   
+   def delete(self, id ):
+      authenticated_user_email = get_jwt_identity()
+      auth_user = User.query.filter_by(email=authenticated_user_email).first()  
+      if not auth_user:
+         return {
+            'message': 'Cannot find record of this user.'
+         }, HTTPStatus.NOT_FOUND
+      url = Url.query.filter_by(id=id).first()  
+      try:
+         url.delete() 
+      except:
+         db.session.rollback()
+         response = { 'message' : 'An error occurred'} 
+         return response , HTTPStatus.INTERNAL_SERVER_ERROR 
+      response = { 'message' : 'Link deleted'} 
+      return HTTPStatus.NO_CONTENT  
 
 
 @url_namespace.route('/<url_code>/click') 
@@ -138,20 +157,15 @@ class GetLatestURLSApiView(Resource):
 @url_namespace.route('/<url_uuid>/qrcode')
 class GenerateURLQrCodeApiView(Resource):
    
-   @url_namespace.doc(description='Get Analytics') 
-   @jwt_required()    
+   @url_namespace.doc(description='Download link qrcode')  
    def get(self , url_uuid ):
-      authenticated_user_email = get_jwt_identity() 
-      auth_user = User.query.filter_by(email=authenticated_user_email).first()   
-      if not auth_user:
-         return {
-            'message': 'Cannot find record of this user.'
-         }, HTTPStatus.NOT_FOUND
-
-      url = Url.query.filter_by(user_id=auth_user.id).all()
-      img = qrcode.make(url_uuid)
+      url = Url.query.filter_by(url_code=url_uuid).first()
+      qr = qrcode.QRCode(version=1, box_size=10, border=5)
+      qr.add_data(url.long_url)
+      qr.make(fit=True)
+      qr_img = qr.make_image(fill='black', back_color='white')
       img_io = io.BytesIO()
-      img.save(img_io, 'PNG')
+      qr_img.save(img_io, 'PNG')
       img_io.seek(0)
       return send_file(
          img_io, mimetype='image/png', 
