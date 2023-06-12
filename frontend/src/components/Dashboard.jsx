@@ -17,6 +17,7 @@ function Dashboard() {
     })
     const [latest , setLatest] = useState([])
     const [ inLoad , setInLoad ] = useState(false)
+    const [ deleteUrl , setDeleteUrl ] = useState(false)
 
 
     async function handleDeleteClick(id){
@@ -26,9 +27,8 @@ function Dashboard() {
             'Content-Type': 'application/json',   
             'Authorization' : `Bearer ${authUser?.tokens?.access_token}`
         }},)
-        if(response.status === 200){
-            const data = await response.json()
-            displayNotification('success',data.message)   
+        if(response.status === 204){
+            setDeleteUrl(true)  
         }
         if(response.status === 401){
             logout()
@@ -57,7 +57,7 @@ function Dashboard() {
                 setLatest(val) 
                 displayNotification('success','Shorten url created')
                 setUrlBreakDown(( prev => {
-                    return { ...prev , 'totalUrls': urlBreakDown + 1 }
+                    return { ...prev , 'totalUrls': urlBreakDown.totalUrls + 1 }
                   }))
                 setLongUrl('')
             }else if(response.status === 400){
@@ -117,12 +117,12 @@ function Dashboard() {
         fetchBreakDown()
 
         
-      },[]) 
+      },[deleteUrl]) 
 
 
   return (
     <div className=' m-4 pb-24'>
-      <div className='w-full bg-white h-36 rounded-md grid grid-cols-1 md:grid-cols-3 gap-4 p-4'>
+      <div className='w-full bg-white md:h-36 rounded-md flex flex-col  md:grid grid-cols-1 md:grid-cols-3 gap-4 p-4'>
         <DashboardBreakDownCard Icon={AiOutlineLink} cardName="ALL URLS" total={urlBreakDown && urlBreakDown?.totalUrls}/>
         <DashboardBreakDownCard Icon={TbHandClick} cardName="TOTAL CLICKS" total={urlBreakDown && urlBreakDown?.totalClicks}/>
         <DashboardBreakDownCard Icon={MdAdd} cardName="URLS ADDED THIS MONTH" total={urlBreakDown && urlBreakDown?.totalUrls}/>
@@ -130,7 +130,7 @@ function Dashboard() {
         
         <form className=' my-6  max-w-xl' onSubmit={handleSubmit}>   
             <label htmlFor="shorten" className="mb-2 text-sm font-medium sr-only ">Paste long url and shorten it</label>
-            <div className="relative">
+            <div className="relative z-10 ">
                 <input type="text"  value={longUrl} onChange={(e)=>setLongUrl(e.target.value)} 
                     className="block w-full p-4 py-5 pl-10  font-normal border
                         border-gray-300 rounded-xl bg-white focus:ring-0 

@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { Link , useNavigate } from "react-router-dom";
 import { AuthContext } from '../contexts/ContextProvider'
 
+
 function Login() {
     const navigate = useNavigate(null)
     const {displayNotification,BACKEND_DOMAIN,setLoading, setAuthUser} = useContext(AuthContext)
@@ -46,9 +47,9 @@ function Login() {
       <div className='z-[2] w-full max-w-sm'>
         <div className=' w-full  mx-auto py-6 p-4 border bg-white rounded shadow-md'>
             <div className=' w-full flex items-center place-content-center gap-4  py-4 pb-12 r  '>
-            <Link to='/' class="flex items-center text-blue-600">          
-                <span to='/' class="navbar-brand " >
-                    <svg class="w-5 h-5 ml-2 lg:ml-0 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+            <Link to='/' className="flex items-center text-blue-600">          
+                <span to='/' className="navbar-brand " >
+                    <svg className="w-5 h-5 ml-2 lg:ml-0 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
                     <path fill="currentColor" d="M485.5 0L576 160H474.9L405.7 0h79.8zm-128 0l69.2 160H149.3L218.5 0h139zm-267 0h79.8l-69.2 160H0L90.5 0zM0 192h100.7l123 251.7c1.5 3.1-2.7 5.9-5 3.3L0 192zm148.2 0h279.6l-137 318.2c-1 2.4-4.5 2.4-5.5 0L148.2 192zm204.1 251.7l123-251.7H576L357.3 446.9c-2.3 2.7-6.5-.1-5-3.2z"></path>
                     </svg>
                 </span>
@@ -60,12 +61,12 @@ function Login() {
             <form className='w-full flex flex-col gap-3 px-4'>            
                 <div>
                     <label htmlFor="helper-text" className="text-input-label">Email</label>
-                    <input type="email" autocomplete="off" value={loginData.email} onChange={(e) => handleValueChange('email', e.target.value)}  
+                    <input type="email" autoComplete="off" value={loginData.email} onChange={(e) => handleValueChange('email', e.target.value)}  
                         className='w-full py-2.5 px-4 border-[1px] border-gray-300 hover:border-[#aeb0b1] font-normal  focus:outline-none rounded  bg-gray-50 focus:bg-white placeholder:text-xs placeholder:font-normal' name='email' placeholder=""/>
                 </div>
                 <div>
                     <label htmlFor="helper-text" className="text-input-label">Password</label>
-                    <input type="password" autocomplete="off" value={loginData.password} onChange={(e) => handleValueChange('password', e.target.value)}   
+                    <input type="password" autoComplete="off" value={loginData.password} onChange={(e) => handleValueChange('password', e.target.value)}   
                         className='w-full py-2.5 px-4 border-[1px] border-gray-300 hover:border-[#aeb0b1]  font-normal focus:outline-none rounded  bg-gray-50 focus:bg-white placeholder:text-xs placeholder:font-normal' name='email' placeholder=""/>
                 </div>
                 <a href="#" className=' text-blue-500 hover:underline hover:underline-offset-1'>Forget password?</a>

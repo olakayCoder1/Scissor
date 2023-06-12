@@ -144,7 +144,7 @@ export default function AuthContextProvider({children}){
  const value = { 
     showNavigationBar , setShowNavigationBar, logout,
     displayNotification,currentPath, setCurrentPath,
-    BACKEND_DOMAIN, loading, setLoading,authUser , setAuthUser
+    BACKEND_DOMAIN, loading, setLoading, authUser , setAuthUser
  }
      
 

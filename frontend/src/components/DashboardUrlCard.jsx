@@ -1,13 +1,13 @@
 import { useContext } from 'react'
 import { AuthContext } from '../contexts/ContextProvider'
-import { AiFillSignal, AiOutlineDownload } from 'react-icons/ai'
+import { AiFillSignal, AiOutlineDownload,AiOutlineCopy } from 'react-icons/ai'
 import {RiDeleteBin6Line} from 'react-icons/ri'
 import { Link } from "react-router-dom"; 
 
 
 function DashboardUrlCard({urlData,handleDeleteClick}) {
-    const {displayNotification,BACKEND_DOMAIN, authUser, logout} = useContext(AuthContext)
-
+    const {displayNotification,BACKEND_DOMAIN} = useContext(AuthContext)
+ 
     const downloadQrCode = () => {
         const ele = document.getElementById(urlData.url_code)
         ele.click()
@@ -16,6 +16,17 @@ function DashboardUrlCard({urlData,handleDeleteClick}) {
 
     const handleClick = () => {
         handleDeleteClick(urlData.uuid);
+      };
+
+    
+      const handleCopyClick = () => {
+        navigator.clipboard.writeText(urlData.short_url)
+          .then(() => {
+            displayNotification('success','Short url copy to clipboard')
+          })
+          .catch((error) => {
+            displayNotification('error','Failed to copy text')
+          });
       };
   return (
     <div className=' w-full bg-white p-4 rounded-md shadow-lg my-4'>
@@ -34,6 +45,9 @@ function DashboardUrlCard({urlData,handleDeleteClick}) {
             <div className=' flex items-center gap-4'>
                 <p onClick={downloadQrCode} className=' p-2 rounded-full bg-blue-100 text-blue-600 w-fit cursor-pointer'>
                     <AiOutlineDownload className=' w-5 h-5'/>
+                </p>
+                <p onClick={handleCopyClick} className=' p-2 rounded-full bg-yellow-100 text-yellow-600 w-fit cursor-pointer'>
+                    <AiOutlineCopy className=' w-5 h-5'/>
                 </p>
                 <a id={urlData?.url_code} className=' hidden' href={`${BACKEND_DOMAIN}/urls/${urlData?.url_code}/qrcode`}>kkdkd</a>
                 <p onClick={handleClick} className=' p-2 rounded-full bg-red-100 text-red-600 w-fit cursor-pointer'>

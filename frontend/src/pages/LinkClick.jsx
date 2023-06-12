@@ -1,8 +1,10 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 import { useParams  , useNavigate } from "react-router-dom";
 import { AuthContext } from '../contexts/ContextProvider'
 
 function LinkClick() {
+
+    const effectRan = useRef(false)
     const navigate = useNavigate(null)
     const { id } = useParams();
     const {BACKEND_DOMAIN,setLoading} = useContext(AuthContext)
@@ -28,7 +30,16 @@ function LinkClick() {
         }
         setLoading(false)
         }
-        handleLink()
+
+        if(effectRan.current === false){
+            effectRan.current = true
+            handleLink()
+        }
+
+
+        return () => {
+            effectRan.current = true
+        }
         },[]);
 
   return (

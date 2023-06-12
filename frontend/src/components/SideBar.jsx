@@ -34,7 +34,7 @@ function SideBar() {
    const [ currentPath, setCurrentPath] = useState(null) 
 
   return (
-    <div className={`${showNavigationBar ? "w-[270px] fixed left-0 bottom-0 top-16  overflow-y-auto " : "hidden"}`}>
+    <div className={`${showNavigationBar ? "w-[270px] fixed left-0 bottom-0 top-16  overflow-y-auto  z-50 bg-white " : "hidden"}`}>
       <aside  className="w-full left-0  h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
          <div className="h-full px-3 py-4 overflow-y-auto  border-r-2 border-gray-200 bg-white">
             <div  className="p-4  rounded-lg bg-blue-50 ">
@@ -49,10 +49,7 @@ function SideBar() {
             <h2 className=' p-2 text-gray-900'>General</h2>
             <ul className="space-y-2 font-medium">
                <SideBarLink Icon={AiOutlineDashboard} linkName="Dashboard" linkLocation='/dashboard' />
-               <SideBarLink Icon={AiOutlineLink} linkName="Link Management" linkLocation='/links' />
                <SideBarLink Icon={AiOutlineSetting} linkName="Settings" linkLocation='#' />
-               {/* <SideBarLink Icon={AiOutlineLogout} linkName="Log Out" linkLocation='#' /> */}
-               {/* <SideBarLink Icon={AiOutlineLogin} linkName="Log In" linkLocation='#' /> */}
                <button onClick={()=> logout()}  className="flex items-center p-2 px-4 bg-red-500 text-white">
                   <AiOutlineLogout className="w-6 h-6 transition duration-75 " />
                   <span className="ml-3">Log Out</span>
