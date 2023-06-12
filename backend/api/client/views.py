@@ -1,5 +1,4 @@
 import qrcode
-import qrcode
 import io
 from http import HTTPStatus
 from flask_restx import Namespace , Resource 
@@ -78,16 +77,18 @@ class GetURLSApiView(Resource):
 
 @url_namespace.route('/<id>') 
 class GetURLSApiView(Resource):
+
    @url_namespace.doc(description='Delete url')  
    @jwt_required()   
    def delete(self, id ):
+      
       authenticated_user_email = get_jwt_identity()
       auth_user = User.query.filter_by(email=authenticated_user_email).first()  
       if not auth_user:
          return {
             'message': 'Cannot find record of this user.'
          }, HTTPStatus.NOT_FOUND
-      url = Url.query.filter_by(id=id).first()  
+      url = Url.query.filter_by(uuid=id).first()  
       try:
          url.delete() 
       except:
@@ -95,7 +96,7 @@ class GetURLSApiView(Resource):
          response = { 'message' : 'An error occurred'} 
          return response , HTTPStatus.INTERNAL_SERVER_ERROR 
       response = { 'message' : 'Link deleted'} 
-      return HTTPStatus.NO_CONTENT  
+      return response , HTTPStatus.NO_CONTENT  
 
 
 @url_namespace.route('/<url_code>/click') 

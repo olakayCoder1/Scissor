@@ -35,11 +35,13 @@ class SignUpApiView(Resource):
    # @auth_namespace.marshal_with(user_model , code=HTTPStatus.CREATED)     
    @auth_namespace.doc(description='Register an account' )
    def post(self):
-      data = request.get_json()
-      first_name = data.get('first_name')
-      last_name = data.get('last_name')     
+      data = request.get_json()  
       email = data.get('email')
-      password = data.get('password')
+      password = data.get('password1')
+      password2 = data.get('password2')
+      if password != password2:
+         response = {'message' : 'Passwords do not match'} 
+         return response, HTTPStatus.BAD_REQUEST
       attempt_user = User.query.filter_by(email=email).first()
       if attempt_user :
          response = {'message' : 'Email already exist'} 
@@ -52,7 +54,7 @@ class SignUpApiView(Resource):
          new_user.save()
       except:
          db.session.rollback()
-         response = {'message' : 'An error occured saving'} 
+         response = {'message' : 'An error occurred saving'} 
          return response, HTTPStatus.INTERNAL_SERVER_ERROR
       access_token = create_access_token(identity=new_user.email)
       refresh_token = create_refresh_token(identity=new_user.email)
